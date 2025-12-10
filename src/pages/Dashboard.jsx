@@ -126,6 +126,7 @@ const Dashboard = ({ user }) => {
   // Stats
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
+  const [error, setError] = useState(null);
 
   // Fetch Categories & Seed if empty
   useEffect(() => {
@@ -248,8 +249,9 @@ const Dashboard = ({ user }) => {
         setExpense(exp);
         setLoading(false);
       },
-      (error) => {
-        console.error("Error fetching data: ", error);
+      (err) => {
+        console.error("Error fetching data: ", err);
+        setError("無法連線至伺服器，請檢查您的網路連線。");
         setLoading(false);
       }
     );
@@ -407,6 +409,17 @@ const Dashboard = ({ user }) => {
       </nav>
 
       <div className="container animate-enter">
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/50 text-red-200 p-4 rounded-xl mb-6 flex items-center gap-3">
+             <div className="bg-red-500 rounded-full p-1">
+               <X size={16} className="text-white" />
+             </div>
+             <div>
+               <p className="font-bold">連線錯誤</p>
+               <p className="text-sm opacity-90">{error}</p>
+             </div>
+          </div>
+        )}
         {/* Stats */}
         <div className="stats-grid">
           <div className="glass-panel">

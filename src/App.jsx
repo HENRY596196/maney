@@ -33,7 +33,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/maney">
       <Routes>
         <Route 
           path="/login" 

@@ -34,10 +34,11 @@ const Profile = ({ user }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // 判斷登入方式
-  const isEmailUser = user?.providerData?.some(p => p.providerId === 'password');
+  const isAnonymous = user?.isAnonymous;
   const isGoogleUser = user?.providerData?.some(p => p.providerId === 'google.com');
   const isAppleUser = user?.providerData?.some(p => p.providerId === 'apple.com');
-  const isAnonymous = user?.isAnonymous;
+  // Email 使用者:有 email 且不是匿名,也不是 Google/Apple 登入
+  const isEmailUser = user?.email && !isAnonymous && !isGoogleUser && !isAppleUser;
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();

@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import { Loader2 } from 'lucide-react';
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
         <Route 
           path="/" 
           element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/profile" 
+          element={user ? <Profile user={user} /> : <Navigate to="/login" />} 
         />
       </Routes>
     </Router>

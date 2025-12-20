@@ -41,9 +41,11 @@ import {
   CreditCard,
   Banknote,
   Landmark,
+  UserCog,
 } from "lucide-react";
 import { writeBatch, getDocs } from "firebase/firestore";
 import FinanceCharts from "../components/FinanceCharts";
+import { useNavigate } from "react-router-dom";
 
 const ICON_MAP = {
   Wallet,
@@ -101,6 +103,7 @@ const DEFAULT_ACCOUNTS = [
 const INCOME_CATEGORIES = []; // Removing this as we use dynamic now
 
 const Dashboard = ({ user }) => {
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -402,13 +405,22 @@ const Dashboard = ({ user }) => {
               <p className="text-sm text-muted">開始記帳吧！</p>
             </div>
           </div>
-          <button
-            onClick={() => signOut(auth)}
-            className="btn-icon"
-            title="登出"
-          >
-            <LogOut size={20} />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => navigate('/profile')}
+              className="btn-icon"
+              title="帳號管理"
+            >
+              <UserCog size={20} />
+            </button>
+            <button
+              onClick={() => signOut(auth)}
+              className="btn-icon"
+              title="登出"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
         </div>
       </nav>
 

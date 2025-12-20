@@ -4,11 +4,12 @@ import {
   signInWithPopup, 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile
+  updateProfile,
+  signInAnonymously
 } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
+import { auth, googleProvider, appleProvider } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { Wallet, Mail, Lock, User } from 'lucide-react';
+import { Wallet, Mail, Lock, User, UserX } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,6 +33,32 @@ const Login = () => {
       if (err.code === 'auth/configuration-not-found') {
         setError('請設定 Firebase Config (src/firebase.js)');
       }
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      setError('');
+      await signInWithPopup(auth, appleProvider);
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError('登入已取消');
+      } else {
+        setError('Apple 登入失敗,請稍後再試。');
+      }
+    }
+  };
+
+  const handleAnonymousSignIn = async () => {
+    try {
+      setError('');
+      await signInAnonymously(auth);
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+      setError('匿名登入失敗,請稍後再試。');
     }
   };
 
@@ -215,21 +242,48 @@ const Login = () => {
           <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
         </div>
 
-        {/* Google 登入 */}
-        <button 
-          onClick={handleGoogleSignIn}
-          className="btn w-full justify-center"
-          type="button"
-        >
-          <img 
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-            alt="Google" 
-            style={{ width: '20px', height: '20px', marginRight: '8px' }}
-          />
-          使用 Google 帳號登入
-        </button>
+        {/* 第三方登入選項 */}
+        <div className="flex flex-col gap-sm mb-md">
+          {/* Google 登入 */}
+          <button 
+            onClick={handleGoogleSignIn}
+            className="btn w-full justify-center"
+            type="button"
+          >
+            <img 
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+              alt="Google" 
+              style={{ width: '20px', height: '20px', marginRight: '8px' }}
+            />
+            使用 Google 登入
+          </button>
 
-        <p className="mt-md text-sm text-muted">
+          {/* Apple 登入 */}
+          <button 
+            onClick={handleAppleSignIn}
+            className="btn w-full justify-center"
+            type="button"
+            style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" style={{ marginRight: '8px' }}>
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            使用 Apple 登入
+          </button>
+
+          {/* 匿名登入 */}
+          <button 
+            onClick={handleAnonymousSignIn}
+            className="btn w-full justify-center"
+            type="button"
+            style={{ background: 'rgba(156,163,175,0.2)', border: '1px solid rgba(156,163,175,0.3)' }}
+          >
+            <UserX size={20} style={{ marginRight: '8px' }} />
+            訪客模式(匿名登入)
+          </button>
+        </div>
+
+        <p className="text-xs text-muted text-center">
           安全登入由 Firebase Authentication 提供
         </p>
       </div>

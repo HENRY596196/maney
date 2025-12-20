@@ -228,7 +228,11 @@ const Dashboard = ({ user }) => {
   useEffect(() => {
     if (!user) return;
 
-    const q = query(collection(db, "expenses"));
+    const q = query(
+      collection(db, "expenses"),
+      where("uid", "==", user.uid),
+      orderBy("createdAt", "desc")
+    );
 
     const unsubscribe = onSnapshot(
       q,
@@ -411,13 +415,13 @@ const Dashboard = ({ user }) => {
       <div className="container animate-enter">
         {error && (
           <div className="bg-red-500/20 border border-red-500/50 text-red-200 p-4 rounded-xl mb-6 flex items-center gap-3">
-             <div className="bg-red-500 rounded-full p-1">
-               <X size={16} className="text-white" />
-             </div>
-             <div>
-               <p className="font-bold">連線錯誤</p>
-               <p className="text-sm opacity-90">{error}</p>
-             </div>
+            <div className="bg-red-500 rounded-full p-1">
+              <X size={16} className="text-white" />
+            </div>
+            <div>
+              <p className="font-bold">連線錯誤</p>
+              <p className="text-sm opacity-90">{error}</p>
+            </div>
           </div>
         )}
         {/* Stats */}
@@ -449,7 +453,7 @@ const Dashboard = ({ user }) => {
         </div>
 
         <div className="mb-lg">
-           <FinanceCharts transactions={transactions} accounts={accounts} />
+          <FinanceCharts transactions={transactions} accounts={accounts} />
         </div>
 
         {/* Accounts Grid (New) */}
